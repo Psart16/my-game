@@ -20,3 +20,179 @@
   <script src="script.js"></script> <!-- Link to JS file -->
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Character Creation</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .form-container {
+      max-width: 600px;
+      margin: auto;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 8px;
+      margin: 5px 0;
+    }
+    .form-group button {
+      padding: 10px;
+    }
+    h3 {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Character Creation</h1>
+
+<div class="form-container">
+  <form id="characterForm">
+    <!-- Character Name -->
+    <div class="form-group">
+      <label for="name">Character Name:</label>
+      <input type="text" id="name" name="name" placeholder="Enter character name" required>
+    </div>
+
+    <!-- Race Selection -->
+    <div class="form-group">
+      <label for="race">Choose Race (or roll for random):</label>
+      <select id="race" name="race">
+        <option value="Human">Human</option>
+        <option value="Dwarf">Dwarf</option>
+        <option value="Halfling">Halfling</option>
+        <option value="Elf">Elf</option>
+      </select>
+      <button type="button" onclick="rollRace()">Roll for Random Race (1d6)</button>
+    </div>
+
+    <!-- Stat Display -->
+    <h3>Character Stats</h3>
+    <div class="form-group">
+      <label for="mo">Movement (Mo):</label>
+      <input type="number" id="mo" name="mo" readonly>
+    </div>
+    <div class="form-group">
+      <label for="ms">Melee Skill (MS):</label>
+      <input type="number" id="ms" name="ms" readonly>
+    </div>
+    <div class="form-group">
+      <label for="rs">Range Skill (RS):</label>
+      <input type="number" id="rs" name="rs" readonly>
+    </div>
+    <div class="form-group">
+      <label for="st">Strength (ST):</label>
+      <input type="number" id="st" name="st" readonly>
+    </div>
+    <div class="form-group">
+      <label for="co">Constitution (CO):</label>
+      <input type="number" id="co" name="co" readonly>
+    </div>
+    <div class="form-group">
+      <label for="at">Attack (AT):</label>
+      <input type="number" id="at" name="at" readonly>
+    </div>
+    <div class="form-group">
+      <label for="vi">Vivacity (VI):</label>
+      <input type="number" id="vi" name="vi" readonly>
+    </div>
+    <div class="form-group">
+      <label for="sp">Spirit (SP):</label>
+      <input type="number" id="sp" name="sp" readonly>
+    </div>
+
+    <!-- Level Up Stats -->
+    <h3>Leveling Up (For Leader - Level 5)</h3>
+    <div class="form-group">
+      <label for="levelUp">Stat Upgrades (For Leader - choose 4 upgrades):</label>
+      <input type="text" id="levelUp" placeholder="e.g., AT +2, ST +1" required>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="form-group">
+      <button type="button" onclick="submitCharacter()">Submit Character</button>
+    </div>
+  </form>
+</div>
+
+<script>
+// Define the races and their stats
+const races = {
+  "Human": { mo: 4, ms: 3, rs: 3, st: 3, co: 3, at: 1, vi: 3, sp: 6 },
+  "Dwarf": { mo: 3, ms: 4, rs: 2, st: 4, co: 4, at: 1, vi: 2, sp: 8 },
+  "Halfling": { mo: 3, ms: 2, rs: 4, st: 2, co: 4, at: 2, vi: 5, sp: 9 },
+  "Elf": { mo: 5, ms: 4, rs: 4, st: 4, co: 4, at: 2, vi: 6, sp: 8 }
+};
+
+// Function to roll for random race
+function rollRace() {
+  let roll = Math.floor(Math.random() * 6) + 1;
+  let race;
+  switch (roll) {
+    case 1: race = "Human"; break;
+    case 2: race = "Dwarf"; break;
+    case 3: race = "Halfling"; break;
+    case 4: race = "Elf"; break;
+    case 5: race = prompt("You rolled a 5! Choose your race: Human, Dwarf, Halfling, Elf"); break;
+    case 6: race = prompt("You rolled a 6! Choose your race: Human, Dwarf, Halfling, Elf"); break;
+  }
+
+  // Set the selected or rolled race
+  document.getElementById("race").value = race;
+  updateStats(race);
+}
+
+// Function to update stats based on the selected race
+function updateStats(race) {
+  const stats = races[race];
+  document.getElementById("mo").value = stats.mo;
+  document.getElementById("ms").value = stats.ms;
+  document.getElementById("rs").value = stats.rs;
+  document.getElementById("st").value = stats.st;
+  document.getElementById("co").value = stats.co;
+  document.getElementById("at").value = stats.at;
+  document.getElementById("vi").value = stats.vi;
+  document.getElementById("sp").value = stats.sp;
+}
+
+// Function to submit the character
+function submitCharacter() {
+  const character = {
+    name: document.getElementById("name").value,
+    race: document.getElementById("race").value,
+    stats: {
+      mo: document.getElementById("mo").value,
+      ms: document.getElementById("ms").value,
+      rs: document.getElementById("rs").value,
+      st: document.getElementById("st").value,
+      co: document.getElementById("co").value,
+      at: document.getElementById("at").value,
+      vi: document.getElementById("vi").value,
+      sp: document.getElementById("sp").value
+    },
+    levelUp: document.getElementById("levelUp").value
+  };
+
+  // Save character in localStorage
+  localStorage.setItem("character", JSON.stringify(character));
+
+  alert("Character saved!");
+}
+</script>
+
+</body>
+</html>
